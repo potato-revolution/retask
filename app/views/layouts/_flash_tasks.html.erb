@@ -1,5 +1,5 @@
-<% flash.each do |message_type, message| %>
+<% flash.each do |task_type, task| %>
 
-  <div><%= message %></div>
+  <div class="alert alert-<%= task_type %>"><%= task %></div>
 
 <% end %>
