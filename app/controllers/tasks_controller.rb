@@ -2,10 +2,11 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   
   def index
-    @tasks = Task.all.page(params[:page]).per(10)
+    @tasks = Task.where(user_id: session[:user_id]).page(params[:page]).per(10)
   end
   
   def show
+    @task = Task.where(user_id: session[:user_id]).where(id: params[:id]).first
   end
   
   def new
@@ -13,17 +14,16 @@ class TasksController < ApplicationController
   end
   
   def create
-    @task = Task.new(task_params)
-    
-    if @task.save
-      flash[:success] = 'タスクが正常に決定されました'
-      redirect_to @task
-    
-    else
-      flash.now[:danger] = 'タスクが決定されませんでした'
-      render :new
-    end
-    
+    @task = current_user.tasks.build(task_params)
+     if @task.save
+       flash[:success] = 'タスクを決定しました。'
+       redirect_to root_url
+     else
+       @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
+       flash.now[:danger] = 'タスクの決定に失敗しました。'
+       render 'toppages/index'
+     end
+
   end
   
   def edit

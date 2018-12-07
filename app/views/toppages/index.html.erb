@@ -1,5 +1,32 @@
-<div class="center jumbotron">
-  <div class="text-center">
-    <h1>Welcome to the Retasks</h1>
+<% if logged_in? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>ステータス</th>
+        <th>タスク</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tasks.each do |task| %>
+        <tr>
+          <td><%= link_to task.id, task %></td>
+          <td><%= task.status %></td>
+          <td><%= task.content %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <%= link_to '新規タスクの決定', new_task_path, class: "btn btn-primary" %>
+  
+<% else %>
+  <div class="center jumbotron">
+    <div class="text-center">
+      <h1>Welcome to the Retasks</h1>
+      <%= link_to 'Sign up now!', signup_path, class: 'btn btn-lg btn-primary' %>
+    </div>
   </div>
-</div>
+<% end %>
+
+
